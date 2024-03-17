@@ -4,7 +4,10 @@
 .DS_Store
 Thumbs.db
 .lock-wscript
+log.txt
 *.pyc
 .project
 .cproject
 builtins
+manifest.private.der
+manifest.public.der
