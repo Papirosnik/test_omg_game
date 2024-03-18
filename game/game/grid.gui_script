@@ -16,18 +16,10 @@ local function clear_grid(self)
             gui.delete_node(node)
         end
     end
+    self.cells = {}
 end
 
-local function create_grid(self)
-
-    local level = current_level()
-    
-    print("Create grid for level " .. level.name)
-
-    clear_grid(self)
-
-    -- Create cells according to the level data
-    self.cells = {}
+local function create_cells(self, level)
     local template = gui.get_node("cell/root")
     for y = 1, level.size do
         for x = 1, level.size do
@@ -39,15 +31,15 @@ local function create_grid(self)
             local new_root = new_cell[hash("cell/root")]
             local new_id = "cell_" .. x .. "x" .. y
             gui.set_id(new_root, new_id)
-            
+
             local new_text = new_cell[hash("cell/text")]
             local new_text_id = new_id .. "_text"
             gui.set_id(new_text, new_text_id)
-            
+
             local new_cover = new_cell[hash("cell/cover")]
             local new_cover_id = new_id .. "_cover"
             gui.set_id(new_cover, new_cover_id)
-            
+
             self.cells[cell_index] = {
                 [new_id] = new_root,
                 [new_text_id] = new_text,
@@ -69,26 +61,25 @@ local function create_grid(self)
             gui.set_enabled(new_root, true)
         end
     end
+end
 
-    -- set letters for each cell
+local function setup_words(self, level)
     for word, position in pairs(level.words) do
-        print(word)
         for i = 1, #word do
             local pos_index = (i - 1) * 2 + 1
             local cell_x, cell_y = position[pos_index], position[pos_index + 1]
-
-            -- find the text node for the given letter/cell
             local node_name = "cell_" .. cell_x .. "x" .. cell_y .. "_text"
-            print(node_name)
             local text_node = gui.get_node(hash(node_name))
-            if text_node then
-                gui.set_text(text_node, word:sub(i, i))
-            else
-                print("NOT FOUND!")
-            end
+            gui.set_text(text_node, word:sub(i, i))
         end
     end
-    
+end
+
+local function create_grid(self)
+    local level = current_level()
+    clear_grid(self)
+    create_cells(self, level)
+    setup_words(self, level)
 end
 
 function on_message(self, message_id, message, sender)
