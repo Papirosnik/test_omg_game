@@ -1,10 +1,10 @@
 local user_progress = {
     MSG_PROGRESS_CHANGED = hash("user_progress_changed"),
     data = {
-        current_level = 1,
+        current_level = 9999,
         level_progress = {},
         level_bonus_words = {},
-        total_bonus_words = 0
+        total_bonus_words = 123
     }
 }
 
