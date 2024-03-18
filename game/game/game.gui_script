@@ -25,6 +25,7 @@ end
 
 local function skip_level()
     user_progress:set_next_level()
+    msg.post("/game/grid#grid_gui", messages.CREATE_LEVEL_GRID)
 end
 
 function on_input(self, action_id, action)

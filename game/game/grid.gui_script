@@ -2,18 +2,20 @@ local user_progress = require "game.common.user_progress"
 local levels_holder = require "game.common.levels_holder"
 local messages = require "game.common.messages"
 
-
 function init(self)
-end
-
-function final(self)
-end
-
-function update(self, dt)
+    self.cells = {}
 end
 
 local function current_level()
     return levels_holder:get_level_by_index(user_progress:current_level_index())
+end
+
+local function clear_grid(self)
+    for i = 1, #self.cells do
+        for _, node in pairs(self.cells[i]) do
+            gui.delete_node(node)
+        end
+    end
 end
 
 local function create_grid(self)
@@ -22,7 +24,9 @@ local function create_grid(self)
     
     print("Create grid for level " .. level.name)
 
-    -- Spawns cells according to the level data
+    clear_grid(self)
+
+    -- Create cells according to the level data
     self.cells = {}
     local template = gui.get_node("cell/root")
     for y = 1, level.size do
@@ -50,33 +54,44 @@ local function create_grid(self)
                 [new_cover_id] = new_cover,
             }
 
+            -- cells positioning and scaling (if needed)
             local need_scale = level.size > 4
             local scale_factor = need_scale and (4 / level.size) or 1
-            print("SCALE_FACTOR: " .. scale_factor)
-            
             local pos = gui.get_position(new_root)
             local mid = (level.size + 1) / 2
-            pos.x = 320 - (x - mid) * 130 * scale_factor
-            pos.y = 400 + (y - mid) * 130 * scale_factor
+            pos.x = 320 + (x - mid) * 130 * scale_factor
+            pos.y = 400 - (y - mid) * 130 * scale_factor
             gui.set_position(new_root, pos)
-            
-            if need_scale then
-                gui.set_scale(new_root, vmath.vector3(scale_factor))
-            end
-
+            gui.set_scale(new_root, vmath.vector3(scale_factor))
             gui.set_enabled(new_root, true)
         end
     end
 
-    -- set letters in the cells according to the level data
-    for word, positions in pairs(level.words) do
+    -- set letters for each cell
+    for word, position in pairs(level.words) do
         print(word)
+        for i = 1, #word do
+            local pos_index = (i - 1) * 2 + 1
+            local cell_x, cell_y = position[pos_index], position[pos_index + 1]
+
+            -- find the text node for the given letter/cell
+            local node_name = "cell_" .. cell_x .. "x" .. cell_y .. "_text"
+            print(node_name)
+            local text_node = gui.get_node(hash(node_name))
+            if text_node then
+                gui.set_text(text_node, word:sub(i, i))
+            else
+                print("NOT FOUND!")
+            end
+        end
     end
     
 end
 
 function on_message(self, message_id, message, sender)
-    if message_id == messages.CREATE_LEVEL_GRID then
+    if message_id == messages.START_NEW_LEVEL then
+        
+    elseif message_id == messages.CREATE_LEVEL_GRID then
         create_grid(self, message)
     end
 end
