@@ -1,22 +1,18 @@
 local user_progress = require "game.common.user_progress"
+local levels_holder = require "game.common.levels_holder"
+local defsave = require("defsave.defsave")
 
 function init(self)
     --msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
+    local defsave = require("defsave.defsave")
+    defsave.appname = "test_omg"
+    levels_holder:init()
+    user_progress:init()
+end
 
-    local levels_json = sys.load_resource("/assets/data/levels.json")
-    self.levels = json.decode(levels_json)
-
-    user_progress:load()
+function final(self)
+    user_progress:done()
 end
 
 function on_message(self, message_id, message, sender)
-    -- Add message-handling code here
-    -- Learn more: https://defold.com/manuals/message-passing/
-    -- Remove this function if not needed
-end
-
-
-
-local function load_user_progress()
-    
 end
