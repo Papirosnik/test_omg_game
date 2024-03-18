@@ -62,7 +62,10 @@ local function create_grid(self)
             pos.x = 320 + (x - mid) * 130 * scale_factor
             pos.y = 400 - (y - mid) * 130 * scale_factor
             gui.set_position(new_root, pos)
-            gui.set_scale(new_root, vmath.vector3(scale_factor))
+
+            gui.set_scale(new_root, vmath.vector3(0))
+            gui.animate(new_root, gui.PROP_SCALE, scale_factor, gui.EASING_OUTBOUNCE, 0.75)
+
             gui.set_enabled(new_root, true)
         end
     end
