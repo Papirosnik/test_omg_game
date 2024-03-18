@@ -1,14 +1,17 @@
-local user_progress = require "game.user_progress"
+local user_progress = require "game.common.user_progress"
 
 function init(self)
     msg.post(".", "acquire_input_focus")
+    self.txt_current_level = gui.get_node("txt_current_level")
+    self.txt_bonus_words = gui.get_node("txt_bonus_words")
     self.btn_skip_level = gui.get_node("btn_skip_level")
     self.txt_skip_level = gui.get_node("txt_skip_level")
 end
 
 function on_message(self, message_id, message, sender)
     if message_id == user_progress.MSG_PROGRESS_CHANGED then
-        print("PROGRESS CHANGED")
+        gui.set_text(self.txt_current_level, "Level: " .. message.current_level)
+        gui.set_text(self.txt_bonus_words, "Bonus words: " .. message.total_bonus_words)
     end
 end
 

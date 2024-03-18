@@ -1,4 +1,4 @@
-local user_progress = require "game.user_progress"
+local user_progress = require "game.common.user_progress"
 
 function init(self)
     --msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })

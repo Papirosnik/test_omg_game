@@ -1,4 +1,4 @@
-script: "/game/gameplay/game.gui_script"
+script: "/game/gameplay/gameplay.gui_script"
 fonts {
   name: "default"
   font: "/builtins/fonts/default.font"
@@ -109,7 +109,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "common_atlas/white_button"
-  id: "level_box"
+  id: "current_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -169,7 +169,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Level: 1"
   font: "ddff"
-  id: "level_text"
+  id: "txt_current_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -187,7 +187,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "level_box"
+  parent: "current_level"
   layer: ""
   inherit_alpha: false
   alpha: 1.0
@@ -419,7 +419,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Bonus words: 0"
   font: "ddff"
-  id: "bonus_words_text"
+  id: "txt_bonus_words"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
