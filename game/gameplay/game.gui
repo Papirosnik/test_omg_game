@@ -1,4 +1,4 @@
-script: ""
+script: "/game/gameplay/game.gui_script"
 fonts {
   name: "default"
   font: "/builtins/fonts/default.font"
@@ -20,7 +20,7 @@ background_color {
 nodes {
   position {
     x: 320.0
-    y: 870.0
+    y: 480.0
     z: 0.0
     w: 1.0
   }
@@ -37,7 +37,65 @@ nodes {
     w: 1.0
   }
   size {
-    x: 280.0
+    x: 640.0
+    y: 960.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: ""
+  id: "root"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  adjust_mode: ADJUST_MODE_STRETCH
+  layer: ""
+  inherit_alpha: true
+  slice9 {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  template_node_child: false
+  size_mode: SIZE_MODE_MANUAL
+  custom_type: 0
+  enabled: true
+  visible: true
+  material: ""
+}
+nodes {
+  position {
+    x: 0.0
+    y: 400.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 320.0
     y: 116.0
     z: 0.0
     w: 1.0
@@ -56,6 +114,7 @@ nodes {
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_STRETCH
+  parent: "root"
   layer: ""
   inherit_alpha: false
   slice9 {
@@ -144,8 +203,8 @@ nodes {
 }
 nodes {
   position {
-    x: 470.81363
-    y: 821.17017
+    x: 150.0
+    y: 351.03354
     z: 0.0
     w: 1.0
   }
@@ -176,11 +235,12 @@ nodes {
   type: TYPE_PIE
   blend_mode: BLEND_MODE_ALPHA
   texture: "common_atlas/light-grey-640"
-  id: "skip_level"
+  id: "btn_skip_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
+  parent: "root"
   layer: ""
   inherit_alpha: false
   outerBounds: PIEBOUNDS_ELLIPSE
@@ -218,8 +278,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 200.0
-    y: 100.0
+    x: 80.0
+    y: 64.0
     z: 0.0
     w: 1.0
   }
@@ -233,7 +293,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "Skip >>"
   font: "default"
-  id: "text"
+  id: "txt_skip_level"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -251,7 +311,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "skip_level"
+  parent: "btn_skip_level"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -267,8 +327,8 @@ nodes {
 }
 nodes {
   position {
-    x: 320.0
-    y: 80.0
+    x: 0.0
+    y: -412.1469
     z: 0.0
     w: 1.0
   }
@@ -299,11 +359,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "common_atlas/white_button_round"
-  id: "bonus_words_bg"
+  id: "bonus_words"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_STRETCH
+  parent: "root"
   layer: ""
   inherit_alpha: false
   slice9 {
@@ -376,7 +437,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "bonus_words_bg"
+  parent: "bonus_words"
   layer: ""
   inherit_alpha: false
   alpha: 1.0
@@ -392,8 +453,8 @@ nodes {
 }
 nodes {
   position {
-    x: 320.0
-    y: 757.2997
+    x: 0.0
+    y: 273.21228
     z: 0.0
     w: 1.0
   }
@@ -424,11 +485,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "common_atlas/white_button_round"
-  id: "box"
+  id: "current_word"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
+  parent: "root"
   layer: ""
   inherit_alpha: true
   slice9 {
