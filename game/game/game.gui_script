@@ -7,18 +7,13 @@ local function current_level()
     return levels_holder:get_level_by_index(user_progress:current_level_index())
 end
 
-local function create_grid(self)
-    local level = current_level()
-    msg.post("/game/grid#grid_gui", messages.CREATE_LEVEL_GRID, level)
-end
-
 function init(self)
     msg.post(".", "acquire_input_focus")
     self.txt_current_level = gui.get_node("txt_current_level")
     self.txt_bonus_words = gui.get_node("txt_bonus_words")
     self.btn_skip_level = gui.get_node("btn_skip_level")
     self.txt_skip_level = gui.get_node("txt_skip_level")
-    create_grid(self)
+    msg.post("/game/grid#grid_gui", messages.CREATE_LEVEL_GRID)
 end
 
 function on_message(self, message_id, message, sender)

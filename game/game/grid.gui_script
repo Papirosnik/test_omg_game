@@ -1,3 +1,5 @@
+local user_progress = require "game.common.user_progress"
+local levels_holder = require "game.common.levels_holder"
 local messages = require "game.common.messages"
 
 
@@ -10,8 +12,14 @@ end
 function update(self, dt)
 end
 
-local function create_grid(self, level)
+local function current_level()
+    return levels_holder:get_level_by_index(user_progress:current_level_index())
+end
 
+local function create_grid(self)
+
+    local level = current_level()
+    
     print("Create grid for level " .. level.name)
 
     -- Spawns cells according to the level data
@@ -19,7 +27,9 @@ local function create_grid(self, level)
     local template = gui.get_node("cell/root")
     for y = 1, level.size do
         for x = 1, level.size do
+
             local cell_index = (y - 1) * level.size + x
+
             local new_cell = gui.clone_tree(template)
 
             local new_root = new_cell[hash("cell/root")]
@@ -40,10 +50,20 @@ local function create_grid(self, level)
                 [new_cover_id] = new_cover,
             }
 
+            local need_scale = level.size > 4
+            local scale_factor = need_scale and (4 / level.size) or 1
+            print("SCALE_FACTOR: " .. scale_factor)
+            
             local pos = gui.get_position(new_root)
-            pos.x = 320 - (x - 2) * 130
-            pos.y = 400 + (y - 2) * 130
+            local mid = (level.size + 1) / 2
+            pos.x = 320 - (x - mid) * 130 * scale_factor
+            pos.y = 400 + (y - mid) * 130 * scale_factor
             gui.set_position(new_root, pos)
+            
+            if need_scale then
+                gui.set_scale(new_root, vmath.vector3(scale_factor))
+            end
+
             gui.set_enabled(new_root, true)
         end
     end
