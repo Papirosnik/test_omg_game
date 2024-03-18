@@ -1,7 +1,7 @@
 name: "main"
 collection_instances {
-  id: "gameplay"
-  collection: "/game/gameplay/gameplay.collection"
+  id: "game"
+  collection: "/game/game/game.collection"
   position {
     x: 0.0
     y: 0.0

@@ -1,0 +1,65 @@
+local messages = require "game.common.messages"
+
+
+function init(self)
+end
+
+function final(self)
+end
+
+function update(self, dt)
+end
+
+local function create_grid(self, level)
+
+    print("Create grid for level " .. level.name)
+
+    -- Spawns cells according to the level data
+    self.cells = {}
+    local template = gui.get_node("cell/root")
+    for y = 1, level.size do
+        for x = 1, level.size do
+            local cell_index = (y - 1) * level.size + x
+            local new_cell = gui.clone_tree(template)
+
+            local new_root = new_cell[hash("cell/root")]
+            local new_id = "cell_" .. x .. "x" .. y
+            gui.set_id(new_root, new_id)
+            
+            local new_text = new_cell[hash("cell/text")]
+            local new_text_id = new_id .. "_text"
+            gui.set_id(new_text, new_text_id)
+            
+            local new_cover = new_cell[hash("cell/cover")]
+            local new_cover_id = new_id .. "_cover"
+            gui.set_id(new_cover, new_cover_id)
+            
+            self.cells[cell_index] = {
+                [new_id] = new_root,
+                [new_text_id] = new_text,
+                [new_cover_id] = new_cover,
+            }
+
+            local pos = gui.get_position(new_root)
+            pos.x = 320 - (x - 2) * 130
+            pos.y = 400 + (y - 2) * 130
+            gui.set_position(new_root, pos)
+            gui.set_enabled(new_root, true)
+        end
+    end
+
+    -- set letters in the cells according to the level data
+    for word, positions in pairs(level.words) do
+        print(word)
+    end
+    
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == messages.CREATE_LEVEL_GRID then
+        create_grid(self, message)
+    end
+end
+
+function on_input(self, action_id, action)
+end

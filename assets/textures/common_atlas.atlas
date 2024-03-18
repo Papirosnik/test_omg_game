@@ -10,6 +10,14 @@ images {
   image: "/assets/textures/white_button_round.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/assets/textures/white_rect.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/textures/cell_border.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 margin: 2
 extrude_borders: 2
 inner_padding: 2

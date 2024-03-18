@@ -1,4 +1,4 @@
-script: "/game/gameplay/gameplay.gui_script"
+script: "/game/game/game.gui_script"
 fonts {
   name: "default"
   font: "/builtins/fonts/default.font"
@@ -167,7 +167,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "Level: 1"
+  text: "Level 9999"
   font: "ddff"
   id: "txt_current_level"
   xanchor: XANCHOR_NONE

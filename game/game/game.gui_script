@@ -1,7 +1,15 @@
 local user_progress = require "game.common.user_progress"
+local levels_holder = require "game.common.levels_holder"
+local messages = require "game.common.messages"
+
+
+local function current_level()
+    return levels_holder:get_level_by_index(user_progress:current_level_index())
+end
 
 local function create_grid(self)
-    local level = user_progress.da
+    local level = current_level()
+    msg.post("/game/grid#grid_gui", messages.CREATE_LEVEL_GRID, level)
 end
 
 function init(self)
@@ -14,14 +22,14 @@ function init(self)
 end
 
 function on_message(self, message_id, message, sender)
-    if message_id == user_progress.MSG_PROGRESS_CHANGED then
-        gui.set_text(self.txt_current_level, "Level: " .. message.current_level)
+    if message_id == messages.USER_PROGRESS_CHANGED then
+        gui.set_text(self.txt_current_level, "Level " .. current_level().name)
         gui.set_text(self.txt_bonus_words, "Bonus words: " .. message.total_bonus_words)
     end
 end
 
 local function skip_level()
-    user_progress:next_level()
+    user_progress:set_next_level()
 end
 
 function on_input(self, action_id, action)
