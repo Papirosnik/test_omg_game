@@ -23,6 +23,7 @@ write_log = 0
 compress_archive = 0
 custom_resources = assets/data/
 dependencies#0 = https://github.com/subsoap/defsave/archive/master.zip
+dependencies#1 = https://github.com/defold/lua-language-server/releases/download/v0.0.5/release.zip
 
 [render]
 clear_color_green = 0.9

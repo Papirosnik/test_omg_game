@@ -2,7 +2,7 @@ local levels_holder = require "game.common.levels_holder"
 local user_progress = require "game.common.user_progress"
 
 
-local grid_controller = {
+local grid_context = {
     hash_cell_root = hash("cell/root"),
     hash_cell_text = hash("cell/text"),
     hash_cell_cover = hash("cell/cover"),
@@ -11,13 +11,13 @@ local grid_controller = {
 }
 
 
-function grid_controller.reset(self)
+function grid_context.reset(self)
     self.is_ready = false
     self.cells = {}
 end
 
 
-function grid_controller.clear(self)
+function grid_context.clear(self)
     for y = 1, #self.cells do
         for x = 1, #self.cells[y] do
             for _, node in pairs(self.cells[y][x]) do
@@ -80,7 +80,7 @@ local function setup_words(self, level)
 end
 
 
-function grid_controller.get_grid_pos(self, cell)
+function grid_context.get_cell_pos(self, cell)
     for y = 1, #self.cells do
         for x = 1, #self.cells[y] do
             if cell == self.cells[y][x] then
@@ -92,7 +92,7 @@ end
 
 
 
-function grid_controller.get_cell_at_screen_pos(self, pos_x, pos_y)
+function grid_context.get_cell_by_screen_pos(self, pos_x, pos_y)
     for y = 1, #self.cells do
         for x = 1, #self.cells[y] do
             local cell_root = self.cells[y][x][self.hash_cell_root]
@@ -104,7 +104,7 @@ function grid_controller.get_cell_at_screen_pos(self, pos_x, pos_y)
 end
 
 
-function grid_controller.create_grid(self)
+function grid_context.create_grid(self)
     self:clear()
     local level = current_level()
     create_cells(self, level)
@@ -114,4 +114,4 @@ function grid_controller.create_grid(self)
 end
 
 
-return grid_controller
+return grid_context
