@@ -4,6 +4,8 @@ local messages = require "game.common.messages"
 
 function init(self)
     self.cells = {}
+    self.ready = false
+    msg.post(".", "acquire_input_focus")
 end
 
 local function current_level()
@@ -51,14 +53,18 @@ local function create_cells(self, level)
             local scale_factor = need_scale and (4 / level.size) or 1
             local pos = gui.get_position(new_root)
             local mid = (level.size + 1) / 2
-            pos.x = 320 + (x - mid) * 130 * scale_factor
-            pos.y = 400 - (y - mid) * 130 * scale_factor
+            pos.x = 320 + (x - mid) * 128 * scale_factor
+            pos.y = 400 - (y - mid) * 128 * scale_factor
             gui.set_position(new_root, pos)
 
             gui.set_scale(new_root, vmath.vector3(0))
-            gui.animate(new_root, gui.PROP_SCALE, scale_factor, gui.EASING_OUTBOUNCE, 0.75)
-
             gui.set_enabled(new_root, true)
+            
+            gui.animate(new_root, gui.PROP_SCALE,
+            vmath.vector3(-scale_factor, scale_factor, scale_factor), gui.EASING_INOUTEXPO, 0.5, 0.25 + math.random() * 0.25,
+                function() gui.animate(new_root, "scale.x", scale_factor, gui.EASING_LINEAR, 0.3, 0.75 + math.random() * 0.25,
+                function() self.ready = true end)
+            end)
         end
     end
 end
