@@ -2,99 +2,103 @@ local user_progress = require "game.common.user_progress"
 local levels_holder = require "game.common.levels_holder"
 local messages = require "game.common.messages"
 
+local input_stack = require "game.game.input_stack"
+local grid_controller = require "game.game.grid_controller"
+
+
+local normal_cell_color = vmath.vector4(0.9, 0.9, 0.8, 1)
+local active_cell_color = vmath.vector4(0, 0.9, 0.9, 1)
+
+
 function init(self)
-    self.cells = {}
-    self.ready = false
     msg.post(".", "acquire_input_focus")
+    input_stack:reset()
+    grid_controller:reset()
 end
 
-local function current_level()
-    return levels_holder:get_level_by_index(user_progress:current_level_index())
+
+local function get_cell_root(cell)
+    return cell[grid_controller.hash_cell_root]
 end
 
-local function clear_grid(self)
-    for i = 1, #self.cells do
-        for _, node in pairs(self.cells[i]) do
-            gui.delete_node(node)
-        end
-    end
-    self.cells = {}
+
+local function add_active_cell(self, cell)
+    input_stack:push(cell)
+    gui.animate(get_cell_root(cell), gui.PROP_COLOR, active_cell_color, gui.EASING_LINEAR, 0.15)
 end
 
-local function create_cells(self, level)
-    local template = gui.get_node("cell/root")
-    for y = 1, level.size do
-        for x = 1, level.size do
 
-            local cell_index = (y - 1) * level.size + x
-
-            local new_cell = gui.clone_tree(template)
-
-            local new_root = new_cell[hash("cell/root")]
-            local new_id = "cell_" .. x .. "x" .. y
-            gui.set_id(new_root, new_id)
-
-            local new_text = new_cell[hash("cell/text")]
-            local new_text_id = new_id .. "_text"
-            gui.set_id(new_text, new_text_id)
-
-            local new_cover = new_cell[hash("cell/cover")]
-            local new_cover_id = new_id .. "_cover"
-            gui.set_id(new_cover, new_cover_id)
-
-            self.cells[cell_index] = {
-                [new_id] = new_root,
-                [new_text_id] = new_text,
-                [new_cover_id] = new_cover,
-            }
-
-            -- cells positioning and scaling (if needed)
-            local need_scale = level.size > 4
-            local scale_factor = need_scale and (4 / level.size) or 1
-            local pos = gui.get_position(new_root)
-            local mid = (level.size + 1) / 2
-            pos.x = 320 + (x - mid) * 128 * scale_factor
-            pos.y = 400 - (y - mid) * 128 * scale_factor
-            gui.set_position(new_root, pos)
-
-            gui.set_scale(new_root, vmath.vector3(0))
-            gui.set_enabled(new_root, true)
-            
-            gui.animate(new_root, gui.PROP_SCALE,
-            vmath.vector3(-scale_factor, scale_factor, scale_factor), gui.EASING_INOUTEXPO, 0.5, 0.25 + math.random() * 0.25,
-                function() gui.animate(new_root, "scale.x", scale_factor, gui.EASING_LINEAR, 0.3, 0.75 + math.random() * 0.25,
-                function() self.ready = true end)
-            end)
-        end
+local function pop_active_cell(self)
+    local cell = input_stack:pop()
+    if cell then
+        gui.animate(get_cell_root(cell), gui.PROP_COLOR, normal_cell_color, gui.EASING_LINEAR, 0.15)
+        return true
     end
 end
 
-local function setup_words(self, level)
-    for word, position in pairs(level.words) do
-        for i = 1, #word do
-            local pos_index = (i - 1) * 2 + 1
-            local cell_x, cell_y = position[pos_index], position[pos_index + 1]
-            local node_name = "cell_" .. cell_x .. "x" .. cell_y .. "_text"
-            local text_node = gui.get_node(hash(node_name))
-            gui.set_text(text_node, word:sub(i, i))
+
+local function finish_input(self)
+    while pop_active_cell(self) do end
+end
+
+
+-- returns true if the input set was changed
+local function update_input(self, pos_x, pos_y)
+
+    local cell, cell_x, cell_y = grid_controller:get_cell_at_screen_pos(pos_x, pos_y)
+
+    if cell then
+
+        -- check for very rare (but still possible) case - diagonal movement
+        local last_cell = input_stack:top()
+        if last_cell then
+            local last_cell_x, last_cell_y = grid_controller:get_grid_pos(last_cell)
+            local manhattan_dist = math.abs(last_cell_x - cell_x) + math.abs(last_cell_y - cell_y)
+            if manhattan_dist >= 2 then
+                -- clear_active_cells(self)
+                return false
+            end
         end
+
+        -- check if we came back to the penultimate cell (then remove the last one)
+        if input_stack:contains(cell) then
+            if input_stack:index_of(cell) == input_stack:size() - 1 then
+                pop_active_cell(self)
+                return true
+            end
+        else
+            add_active_cell(self, cell)
+            return true
+        end
+    end
+    return false
+end
+
+
+function on_input(self, action_id, action)
+
+    if not grid_controller.is_ready then
+        return
+    end
+
+    if action_id == hash("touch") then
+        if action.pressed then
+            update_input(self, action.x, action.y)
+        elseif action.released then
+            finish_input(self)
+        end
+    elseif action_id == nil and input_stack:size() > 0 then
+        -- mouse movement with the pressed button
+        update_input(self, action.x, action.y)
     end
 end
 
-local function create_grid(self)
-    local level = current_level()
-    clear_grid(self)
-    create_cells(self, level)
-    setup_words(self, level)
-end
 
 function on_message(self, message_id, message, sender)
     if message_id == messages.START_NEW_LEVEL then
-        
+        print(messages.START_NEW_LEVEL)
     elseif message_id == messages.CREATE_LEVEL_GRID then
-        create_grid(self, message)
+        input_stack:reset()
+        grid_controller:create_grid()
     end
-end
-
-function on_input(self, action_id, action)
 end
