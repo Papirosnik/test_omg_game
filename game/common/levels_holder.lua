@@ -1,8 +1,10 @@
 local levels_holder = {}
 
+local res_uri = "/assets/data/levels.json"
+
 
 function levels_holder.init(self)
-    local levels_json = sys.load_resource("/assets/data/levels.json")
+    local levels_json = sys.load_resource(res_uri)
     self.data = json.decode(levels_json)
 end
 

@@ -9,6 +9,7 @@ local words_storage = require "game.game.words_storage"
 function init(self)
     -- profiler.enable_ui(true)
     msg.post(".", "acquire_input_focus")
+    self.root_node = gui.get_node("root")
     self.txt_current_level = gui.get_node("txt_current_level")
     self.txt_current_word = gui.get_node("txt_current_word")
     self.box_bonus_words = gui.get_node("bonus_words")
@@ -24,6 +25,7 @@ end
 
 ---------------- message handlers ---------------
 local function load_level(self, index)
+    gui.set_enabled(self.root_node, true)
     gui.set_text(self.txt_current_level, "Level " .. current_level:get().name)
     gui.set_text(self.txt_bonus_words, "Bonus words: "..user_progress:total_bonus_words())
     msg.post("/game/grid#grid_gui", messages.LOAD_LEVEL, { ["index"] = index })
@@ -36,11 +38,12 @@ local function hide_info(self)
 end
 
 
-local function show_info(self, text)
+local function show_info(self, text, duration)
+    duration = duration or 3
     hide_info(self)
     gui.set_text(self.txt_show_info, text)
-    gui.animate(self.txt_show_info, "color.w", 1, gui.EASING_INCIRC, 0.25, 0,
-    function() gui.animate(self.txt_show_info, "color.w", 0, gui.EASING_LINEAR, 0.5, 3) end)
+    local fn_hide = function() gui.animate(self.txt_show_info, "color.w", 0, gui.EASING_LINEAR, 0.5, duration) end
+    gui.animate(self.txt_show_info, "color.w", 1, gui.EASING_INCIRC, 0.25, 0, fn_hide)
 end
 
 
@@ -62,7 +65,7 @@ end
 
 local function word_accepted(self, word, way, index)
     show_info(self, "FOUND!")
-    sound.play("/main#sound_positive", {pan = 0.0, gain = 0.5})
+    sound.play("/main#sound_word", {pan = 0.0, gain = 0.5})
     msg.post("/game/grid#grid_gui", messages.WORD_ACCEPTED, { ["word"] = word, ["way"] = way, ["index"] = index })
 end
 
@@ -83,11 +86,28 @@ local function bonus_word_found(self, word)
         show_info(self, "ALREADY COLLECTED")
         sound.play("/main#sound_negative", {pan = 0.0, gain = 0.5})
     else
+        show_info(self, "BONUS WORD FOUND!")
         sound.play("/main#sound_word", {pan = 0.0, gain = 0.5})
         user_progress:add_bonus_word(word)
         local when_done = function() gui.set_text(self.txt_bonus_words, "Bonus words: "..user_progress:total_bonus_words()) end
         gui.animate(self.box_bonus_words, gui.PROP_SCALE, 1.1, gui.EASING_INOUTCIRC, 0.75, 0, when_done, gui.PLAYBACK_ONCE_PINGPONG)
     end
+end
+
+local function celebrate_win(self)
+    sound.play("/main#sound_win", { pan = 0.0, gain = 0.5 })
+    show_info(self, "CONGRATULATIONS!", 100500) -- show congrats forever
+    msg.post("/game/grid#grid_gui", messages.LEVEL_COMPLETE)
+end
+
+local function unload_level(self)
+    user_progress:set_next_level()
+    local fn_done = function()
+        gui.set_scale(self.root_node, vmath.vector3(1))
+        gui.set_enabled(self.root_node, false)
+        msg.post("/main#main", messages.START_LEVEL_SELECTION)
+    end
+    gui.animate(self.root_node, "scale.x", -1, gui.EASING_INBACK, 0.5, 0, fn_done)
 end
 
 
@@ -114,8 +134,6 @@ function on_message(self, message_id, message, sender)
         show_info(self, message.text)
     elseif message_id == messages.HIDE_INFO then
         hide_info(self)
-    elseif message_id == messages.USER_PROGRESS_CHANGED then
-        --gui.set_text(self.txt_bonus_words, "Bonus words: " .. message.total_bonus_words)
     elseif message_id == messages.INPUT_CHANGED then
         update_input(self, message.input)
     elseif message_id == messages.INPUT_COMPLETED then
@@ -128,5 +146,9 @@ function on_message(self, message_id, message, sender)
         try_another_way(self)
     elseif message_id == messages.BONUS_WORD_FOUND then
         bonus_word_found(self, message.word)
+    elseif message_id == messages.LEVEL_COMPLETE then
+        celebrate_win(self)
+    elseif message_id == messages.UNLOAD_LEVEL then
+        unload_level(self)
     end
 end

@@ -8,7 +8,9 @@ local M = {
     WORD_REJECTED = hash("word_rejected"),
     TRY_ANOTHER_WAY = hash("try_another_way"),
     BONUS_WORD_FOUND = hash("bonus_word_found"),
-    USER_PROGRESS_CHANGED = hash("user_progress_changed")
+    LEVEL_COMPLETE = hash("level_complete"),
+    UNLOAD_LEVEL = hash("unload_level"),
+    START_LEVEL_SELECTION= hash("start_level_selection"),
 }
 
 return M

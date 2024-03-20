@@ -20,11 +20,6 @@ local user_progress = {
 }
 
 
-function user_progress.update_info(self)
-    msg.post("/game/game#game_gui", messages.USER_PROGRESS_CHANGED)
-end
-
-
 function user_progress.init(self)
     defsave.appname = "test_omg"
     defsave.verbose = true
@@ -36,8 +31,6 @@ function user_progress.init(self)
     self.data.level_progress = defsave.get(KEY_CURRENT, KEY_LEVEL_PROGRESS)
     self.data.level_bonus_words = defsave.get(KEY_CURRENT, KEY_LEVEL_BONUS_WORDS)
     self.data.total_bonus_words = defsave.get(KEY_CURRENT, KEY_TOTAL_BONUS_WORDS)
-
-    self:update_info()
 end
 
 
@@ -79,8 +72,6 @@ function user_progress.set_next_level(self)
     defsave.set(KEY_CURRENT, KEY_LEVEL_BONUS_WORDS, self.data.level_bonus_words)
 
     flush_save()
-
-    self:update_info()
 end
 
 

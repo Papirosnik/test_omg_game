@@ -80,7 +80,7 @@ local function update_input(self, pos_x, pos_y)
         end
     else
         if add_to_input(self, cell) then
-            sound.play("/main#sound_beep", { pan = 0.0, gain = 0.1 })
+            sound.play("/main#sound_beep", { pan = 0.0, gain = 0.2 })
             return true
         end
     end
@@ -96,17 +96,33 @@ local function load_level()
     grid_storage:create_grid()
 end
 
+local function unload_level()
+    grid_storage:clear()
+    msg.post("/game/game#game_gui", messages.UNLOAD_LEVEL)
+end
 
 function on_input(self, action_id, action)
 
     if not grid_storage.is_ready then return end
 
     if action_id == hash("touch") then
+
         if action.pressed then
+
+            -- before new input chain we should clear old one and hide obsolette messages
             clear_input()
             hide_info()
+
+            -- if we're waiting for tap after level complete
+            if self.win then
+                unload_level()
+                return
+            end
+
+            -- here we go
             self.input_active = true
             update_input(self, action.x, action.y)
+
         elseif action.released then
             self.input_active = false
             local inside_grid = (grid_storage:get_cell_by_screen_pos(action.x, action.y) ~= nil)
@@ -121,10 +137,13 @@ end
 
 function on_message(self, message_id, message, sender)
     if message_id == messages.LOAD_LEVEL then
+        self.win = false
         load_level()
     elseif message_id == messages.WORD_ACCEPTED then
         grid_storage:set_word_completed()
     elseif message_id == messages.WORD_REJECTED then
         clear_input(self)
+    elseif message_id == messages.LEVEL_COMPLETE then
+        self.win = true
     end
 end

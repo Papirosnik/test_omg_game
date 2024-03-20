@@ -28,9 +28,20 @@ local function check_word_way(origin_way)
 end
 
 
-local function word_accepted(word, way)
-    local storedindex = user_progress:set_word_complete(word, way)
-    msg.post("/game/game#game_gui", messages.WORD_ACCEPTED, { ["word"] = word, ["way"] = way, ["index"] = storedindex })
+local function check_for_win(self, word_count)
+    local count = 0
+    for _ in pairs(self.context.words) do
+        count = count + 1
+    end
+    return count == word_count
+end
+
+local function word_accepted(self, word, way)
+    local word_count = user_progress:set_word_complete(word, way)
+    msg.post("/game/game#game_gui", messages.WORD_ACCEPTED, { ["word"] = word, ["way"] = way, ["index"] = word_count })
+    if check_for_win(self, word_count) then
+        timer.delay(2, false, function () msg.post("/game/game#game_gui", messages.LEVEL_COMPLETE) end)
+    end
 end
 
 
@@ -44,15 +55,11 @@ local function try_another_way()
 end
 
 
-function current_level.get_wordindex(self, word)
-end
-
-
 function current_level.check_word(self, word)
     for tw, way in pairs(self.context["words"]) do
         if tw == word then
             if check_word_way(way) then
-                word_accepted(word, way)
+                word_accepted(self, word, way)
             else
                 try_another_way()
             end

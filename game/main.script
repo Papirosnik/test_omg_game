@@ -1,3 +1,4 @@
+local messages = require "game.common.messages"
 local user_progress = require "game.common.user_progress"
 local levels_holder = require "game.common.levels_holder"
 local defsave = require("defsave.defsave")
@@ -15,4 +16,7 @@ function final(self)
 end
 
 function on_message(self, message_id, message, sender)
+    if message_id == messages.START_LEVEL_SELECTION then
+        print(message_id)
+    end
 end
