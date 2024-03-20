@@ -2,6 +2,7 @@ local messages = require "game.common.messages"
 local user_progress = require "game.common.user_progress"
 local levels_holder = require "game.common.levels_holder"
 local input_storage = require "game.game.input_storage"
+local words_storage = require "game.game.words_storage"
 
 
 local current_level = {
@@ -58,7 +59,11 @@ function current_level.check_word(self, word)
             return true
         end
     end
-    word_rejected()
+    if words_storage:word_exists(word) then
+        msg.post("/game/game#game_gui", messages.BONUS_WORD_FOUND, { ["word"] = word })
+    else
+        word_rejected()
+    end
 end
 
 

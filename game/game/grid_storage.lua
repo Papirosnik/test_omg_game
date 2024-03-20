@@ -123,7 +123,7 @@ function grid_storage.create_grid(self)
 end
 
 
-function grid_storage.set_word_completed(self, way, index)
+function grid_storage.set_word_completed(self)
     paint_completed_cells(self, 0)
 end
 
