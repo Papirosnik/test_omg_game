@@ -79,7 +79,8 @@ local function setup_words(self, level)
     end
 end
 
-local function paint_completed_cells(self)
+
+local function paint_completed_cells(self, delay)
     local progress = user_progress:current_level_progress()
     for index, data in ipairs(progress) do
         local color = const.WORD_COLORS[index]
@@ -90,7 +91,9 @@ local function paint_completed_cells(self)
             local cell = self.cells[y][x]
             cell["done"] = true -- restore its finished status
             local root_node = cell.nodes[const.HASH_CELL_ROOT]
-            gui.animate(root_node, gui.PROP_COLOR, color, gui.EASING_LINEAR, 0.25, 2)
+            gui.animate(root_node, gui.PROP_COLOR, color, gui.EASING_LINEAR, 0.25, delay)
+            local text_node = cell.nodes[const.HASH_CELL_TEXT]
+            gui.animate(text_node, "color.w", 0.333, gui.EASING_LINEAR, 0.25, delay)
         end
     end
 end
@@ -114,21 +117,14 @@ function grid_storage.create_grid(self)
     msg.post("/game/game#game_gui", messages.SHOW_INFO, { text = "TRY "..level.size.."x"..level.size.." LEVEL"})
     create_cells(self, level)
     setup_words(self, level)
-    paint_completed_cells(self)
     -- enable gameplay after 2 sec of board animation
+    paint_completed_cells(self, 2)
     timer.delay(2, false, function() self.is_ready = true end)
 end
 
 
 function grid_storage.set_word_completed(self, way, index)
-    for i = 1, #way, 2 do
-        local x = way[i]
-        local y = way[i +1]
-        local cell = self.cells[y][x]
-        cell["done"] = true
-        local root_node = cell.nodes[const.HASH_CELL_ROOT]
-        gui.set_color(root_node, const.WORD_COLORS[index % #const.WORD_COLORS + 1])
-    end
+    paint_completed_cells(self, 0)
 end
 
 

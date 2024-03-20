@@ -10,9 +10,8 @@ local active_cell_color = vmath.vector4(0, 0.9, 0.9, 1)
 
 function init(self)
     msg.post(".", "acquire_input_focus")
-    self.input_active = false
-    input_storage:reset()
     grid_storage:reset()
+    self.input_active = false
 end
 
 
@@ -56,16 +55,6 @@ local function finish_input(self, do_check_words)
 end
 
 
-local function word_accepted(self, word, way, index)
-    grid_storage:set_word_completed(way, index)
-end
-
-
-local function word_rejected(self)
-    clear_input()
-end
-
-
 -- returns true if the input set was changed
 local function update_input(self, pos_x, pos_y)
 
@@ -104,7 +93,6 @@ end
 
 
 local function load_level()
-    input_storage:reset()
     grid_storage:create_grid()
 end
 
@@ -135,8 +123,8 @@ function on_message(self, message_id, message, sender)
     if message_id == messages.LOAD_LEVEL then
         load_level()
     elseif message_id == messages.WORD_ACCEPTED then
-        word_accepted(self, message.word, message.way, message.index)
+        grid_storage:set_word_completed()
     elseif message_id == messages.WORD_REJECTED then
-        word_rejected(self)
+        clear_input(self)
     end
 end

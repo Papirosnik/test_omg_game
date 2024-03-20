@@ -1,6 +1,7 @@
 local user_progress = require "game.common.user_progress"
 local current_level = require "game.game.current_level"
 local messages = require "game.common.messages"
+local input_storage = require "game.game.input_storage"
 
 
 function init(self)
@@ -13,6 +14,7 @@ function init(self)
     self.txt_skip_level = gui.get_node("txt_skip_level")
     self.txt_show_info = gui.get_node("txt_show_info")
     current_level:load_by_index(user_progress.data.current_level)
+    input_storage:reset()
 end
 
 ---------------- message handlers ---------------

@@ -71,9 +71,8 @@ function user_progress.set_next_level(self)
 
     -- clear progress of previous level
     self.data.level_progress = {}
-    defsave.set(KEY_CURRENT, KEY_LEVEL_PROGRESS, self.data.level_progress)
-
     self.data.level_bonus_words = {}
+    defsave.set(KEY_CURRENT, KEY_LEVEL_PROGRESS, self.data.level_progress)
     defsave.set(KEY_CURRENT, KEY_LEVEL_BONUS_WORDS, self.data.level_bonus_words)
 
     flush_save()
