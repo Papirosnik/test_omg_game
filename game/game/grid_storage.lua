@@ -114,7 +114,6 @@ end
 function grid_storage.create_grid(self)
     self:clear()
     local level = current_level:get()
-    msg.post("/game/game#game_gui", messages.SHOW_INFO, { text = "TRY "..level.size.."x"..level.size.." LEVEL"})
     create_cells(self, level)
     setup_words(self, level)
     -- enable gameplay after 2 sec of board animation

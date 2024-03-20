@@ -5,7 +5,6 @@ local input_storage = require "game.game.input_storage"
 local words_storage = require "game.game.words_storage"
 
 
-
 function init(self)
     -- profiler.enable_ui(true)
     msg.post(".", "acquire_input_focus")
@@ -23,13 +22,14 @@ function init(self)
 end
 
 
----------------- message handlers ---------------
-local function load_level(self, index)
-    self.win = false
-    gui.set_enabled(self.root_node, true)
-    gui.set_text(self.txt_current_level, "Level " .. current_level:get().name)
-    msg.post("#", messages.UPDATE_BONUS_COUNT)
-    msg.post("/game/grid#grid_gui", messages.LOAD_LEVEL, { ["index"] = index })
+local function show_info(self, text, duration, delay)
+    duration = duration or 3
+    delay = delay or 0
+    gui.cancel_animation(self.txt_show_info, gui.PROP_COLOR)
+    gui.set_text(self.txt_show_info, text)
+    gui.set_alpha(self.txt_show_info, 0)
+    local fn_hide = function() gui.animate(self.txt_show_info, "color.w", 0, gui.EASING_LINEAR, 0.5, duration) end
+    gui.animate(self.txt_show_info, "color.w", 1, gui.EASING_INCIRC, 0.25, delay, fn_hide)
 end
 
 
@@ -39,12 +39,14 @@ local function hide_info(self)
 end
 
 
-local function show_info(self, text, duration)
-    duration = duration or 3
-    gui.cancel_animation(self.txt_show_info, gui.PROP_COLOR)
-    gui.set_text(self.txt_show_info, text)
-    local fn_hide = function() gui.animate(self.txt_show_info, "color.w", 0, gui.EASING_LINEAR, 0.5, duration) end
-    gui.animate(self.txt_show_info, "color.w", 1, gui.EASING_INCIRC, 0.25, 0, fn_hide)
+---------------- message handlers ---------------
+local function load_level(self, index)
+    self.win = false
+    show_info(self, current_level:get().name, 10, 2)
+    gui.set_enabled(self.root_node, true)
+    gui.set_text(self.txt_current_level, "Level " .. current_level.index)
+    msg.post("#", messages.UPDATE_BONUS_COUNT)
+    msg.post("/game/grid#grid_gui", messages.LOAD_LEVEL, { ["index"] = index })
 end
 
 
