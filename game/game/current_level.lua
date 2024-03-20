@@ -40,7 +40,7 @@ local function word_accepted(self, word, way)
     local word_count = user_progress:set_word_complete(word, way)
     msg.post("/game/game#game_gui", messages.WORD_ACCEPTED, { ["word"] = word, ["way"] = way, ["index"] = word_count })
     if check_for_win(self, word_count) then
-        timer.delay(2, false, function () msg.post("/game/game#game_gui", messages.LEVEL_COMPLETE) end)
+        msg.post("/game/game#game_gui", messages.LEVEL_COMPLETE)
     end
 end
 

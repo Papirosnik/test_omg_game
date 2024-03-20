@@ -53,9 +53,11 @@ function user_progress.current_level_progress(self)
     return self.data.level_progress
 end
 
+
 function user_progress.total_bonus_words(self)
     return self.data.total_bonus_words
 end
+
 
 function user_progress.set_next_level(self)
     if self.data.current_level < levels:count() then
@@ -82,17 +84,31 @@ function user_progress.set_word_complete(self, word, way)
     return #self.data.level_progress
 end
 
+
 function user_progress.check_bonus_word(self, word)
     return self.data.level_bonus_words[word]
+end
+
+
+local function save_bonus_words(self)
+    defsave.set(KEY_CURRENT, KEY_LEVEL_BONUS_WORDS, self.data.level_bonus_words)
+    defsave.set(KEY_CURRENT, KEY_TOTAL_BONUS_WORDS, self.data.total_bonus_words)
+    flush_save()
+    msg.post("/game/game#game_gui", messages.UPDATE_BONUS_COUNT)
 end
 
 
 function user_progress.add_bonus_word(self, word)
     self.data.level_bonus_words[word] = true
     self.data.total_bonus_words = self.data.total_bonus_words + 1
-    defsave.set(KEY_CURRENT, KEY_LEVEL_BONUS_WORDS, self.data.level_bonus_words)
-    defsave.set(KEY_CURRENT, KEY_TOTAL_BONUS_WORDS, self.data.total_bonus_words)
-    flush_save()
+    save_bonus_words(self)
+end
+
+
+function user_progress.reset_bonus_words(self)
+    self.data.level_bonus_words = {}
+    self.data.total_bonus_words = 0
+    save_bonus_words(self)
 end
 
 
