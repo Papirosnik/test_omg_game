@@ -140,7 +140,7 @@ nodes {
   custom_type: 0
   enabled: true
   visible: true
-  material: "common_material"
+  material: "gui"
 }
 nodes {
   position {
@@ -230,7 +230,7 @@ nodes {
   }
   size {
     x: 80.0
-    y: 64.0
+    y: 48.0
     z: 0.0
     w: 1.0
   }
@@ -264,7 +264,7 @@ nodes {
   custom_type: 0
   enabled: true
   visible: true
-  material: "common_material"
+  material: "gui"
 }
 nodes {
   position {
@@ -287,7 +287,7 @@ nodes {
   }
   size {
     x: 80.0
-    y: 64.0
+    y: 48.0
     z: 0.0
     w: 1.0
   }
@@ -390,7 +390,7 @@ nodes {
   custom_type: 0
   enabled: true
   visible: true
-  material: "common_material"
+  material: "gui"
 }
 nodes {
   position {
@@ -583,7 +583,7 @@ nodes {
   custom_type: 0
   enabled: true
   visible: true
-  material: "common_material"
+  material: "gui"
 }
 nodes {
   position {
@@ -707,7 +707,7 @@ nodes {
   custom_type: 0
   enabled: true
   visible: true
-  material: "common_material"
+  material: "gui"
 }
 nodes {
   position {
@@ -784,6 +784,6 @@ materials {
   material: "/builtins/fonts/font-df.material"
 }
 materials {
-  name: "common_material"
-  material: "/assets/materials/gui.material"
+  name: "gui"
+  material: "/builtins/materials/gui.material"
 }

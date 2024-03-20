@@ -12,7 +12,7 @@ local M = {
     UPDATE_BONUS_COUNT = hash("update_bonus_count"),
     LEVEL_COMPLETE = hash("level_complete"),
     UNLOAD_LEVEL = hash("unload_level"),
-    START_LEVEL_SELECTION= hash("start_level_selection"),
+    GOTO_LEVEL_MAP = hash("goto_level_map"),
 }
 
 return M

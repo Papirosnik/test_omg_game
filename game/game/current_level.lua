@@ -13,7 +13,7 @@ local current_level = {
 function current_level.load_by_index(self, level_index)
     self.index = level_index
     self.context = levels_holder:get_level_by_index(level_index)
-    msg.post("/game/game#game_gui", messages.LOAD_LEVEL, { ["index"] = level_index })
+    msg.post("game:/game#game_gui", messages.LOAD_LEVEL, { ["index"] = level_index })
 end
 
 
@@ -38,20 +38,20 @@ end
 
 local function word_accepted(self, word, way)
     local word_count = user_progress:set_word_complete(word, way)
-    msg.post("/game/game#game_gui", messages.WORD_ACCEPTED, { ["word"] = word, ["way"] = way, ["index"] = word_count })
+    msg.post("game:/game#game_gui", messages.WORD_ACCEPTED, { ["word"] = word, ["way"] = way, ["index"] = word_count })
     if check_for_win(self, word_count) then
-        msg.post("/game/game#game_gui", messages.LEVEL_COMPLETE)
+        msg.post("game:/game#game_gui", messages.LEVEL_COMPLETE)
     end
 end
 
 
 local function word_rejected()
-    msg.post("/game/game#game_gui", messages.WORD_REJECTED)
+    msg.post("game:/game#game_gui", messages.WORD_REJECTED)
 end
 
 
 local function try_another_way()
-    msg.post("/game/game#game_gui", messages.TRY_ANOTHER_WAY)
+    msg.post("game:/game#game_gui", messages.TRY_ANOTHER_WAY)
 end
 
 
@@ -67,7 +67,7 @@ function current_level.check_word(self, word)
         end
     end
     if words_storage:word_exists(word) then
-        msg.post("/game/game#game_gui", messages.BONUS_WORD_FOUND, { ["word"] = word })
+        msg.post("game:/game#game_gui", messages.BONUS_WORD_FOUND, { ["word"] = word })
     else
         word_rejected()
     end

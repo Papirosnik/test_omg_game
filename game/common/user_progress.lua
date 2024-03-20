@@ -94,7 +94,7 @@ local function save_bonus_words(self)
     defsave.set(KEY_CURRENT, KEY_LEVEL_BONUS_WORDS, self.data.level_bonus_words)
     defsave.set(KEY_CURRENT, KEY_TOTAL_BONUS_WORDS, self.data.total_bonus_words)
     flush_save()
-    msg.post("/game/game#game_gui", messages.UPDATE_BONUS_COUNT)
+    msg.post("game:/game#game_gui", messages.UPDATE_BONUS_COUNT)
 end
 
 

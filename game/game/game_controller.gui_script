@@ -46,7 +46,7 @@ local function load_level(self, index)
     gui.set_enabled(self.root_node, true)
     gui.set_text(self.txt_current_level, "Level " .. current_level.index)
     msg.post("#", messages.UPDATE_BONUS_COUNT)
-    msg.post("/game/grid#grid_gui", messages.LOAD_LEVEL, { ["index"] = index })
+    msg.post("game:/grid#grid_gui", messages.LOAD_LEVEL, { ["index"] = index })
 end
 
 
@@ -68,20 +68,20 @@ end
 
 local function word_accepted(self, word, way, index)
     show_info(self, "FOUND!")
-    sound.play("/main#sound_word", {pan = 0.0, gain = 0.5})
-    msg.post("/game/grid#grid_gui", messages.WORD_ACCEPTED, { ["word"] = word, ["way"] = way, ["index"] = index })
+    sound.play("main:/main#sound_word", {pan = 0.0, gain = 0.5})
+    msg.post("game:/grid#grid_gui", messages.WORD_ACCEPTED, { ["word"] = word, ["way"] = way, ["index"] = index })
 end
 
 
 local function word_rejected(self)
-    sound.play("/main#sound_negative", {pan = 0.0, gain = 0.5})
-    msg.post("/game/grid#grid_gui", messages.WORD_REJECTED)
+    sound.play("main:/main#sound_negative", {pan = 0.0, gain = 0.5})
+    msg.post("game:/grid#grid_gui", messages.WORD_REJECTED)
 end
 
 
 local function try_another_way(self)
-    sound.play("/main#sound_negative", {pan = 0.0, gain = 0.5})
-    msg.post("/game/grid#grid_gui", messages.TRY_ANOTHER_WAY)
+    sound.play("main:/main#sound_negative", {pan = 0.0, gain = 0.5})
+    msg.post("game:/grid#grid_gui", messages.TRY_ANOTHER_WAY)
     show_info(self, "TRY TO COLLECT THIS WORD IN ANOTHER WAY")
 end
 
@@ -97,10 +97,10 @@ end
 local function bonus_word_found(self, word)
     if user_progress:check_bonus_word(word) then
         show_info(self, "ALREADY COLLECTED")
-        sound.play("/main#sound_negative", {pan = 0.0, gain = 0.5})
+        sound.play("main:/main#sound_negative", {pan = 0.0, gain = 0.5})
     else
         show_info(self, "BONUS WORD FOUND!")
-        sound.play("/main#sound_word", {pan = 0.0, gain = 0.5})
+        sound.play("main:/main#sound_word", {pan = 0.0, gain = 0.5})
         user_progress:add_bonus_word(word)
     end
 end
@@ -109,9 +109,9 @@ end
 local function celebrate_win(self)
     self.win = true
     local postponed_action = function()
-        sound.play("/main#sound_win", { pan = 0.0, gain = 0.5 })
+        sound.play("main:/main#sound_win", { pan = 0.0, gain = 0.5 })
         show_info(self, "CONGRATULATIONS!", 100500) -- show congrats forever
-        msg.post("/game/grid#grid_gui", messages.LEVEL_COMPLETE)
+        msg.post("game:/grid#grid_gui", messages.LEVEL_COMPLETE)
     end
     timer.delay(2, false, postponed_action)
 end
@@ -122,7 +122,7 @@ local function unload_level(self)
     local fn_done = function()
         gui.set_scale(self.root_node, vmath.vector3(1))
         gui.set_enabled(self.root_node, false)
-        msg.post("/main#main", messages.START_LEVEL_SELECTION)
+        msg.post("main:/main#main", messages.GOTO_LEVEL_MAP)
     end
     gui.animate(self.root_node, "scale.x", -1, gui.EASING_INBACK, 0.5, 0, fn_done)
 end
@@ -130,7 +130,7 @@ end
 
 local function on_button_press(btn_node)
     gui.animate(btn_node, gui.PROP_SCALE, vmath.vector3(0.85), gui.EASING_LINEAR, 0.07)
-    sound.play("/main#sound_click", {pan = 0.0})
+    sound.play("/main:/main#sound_click", {pan = 0.0})
 end
 
 local function on_button_release(btn_node)

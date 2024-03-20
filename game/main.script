@@ -3,20 +3,29 @@ local user_progress = require "game.common.user_progress"
 local levels_holder = require "game.common.levels_holder"
 local defsave = require("defsave.defsave")
 
+
 function init(self)
     --msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
-    local defsave = require("defsave.defsave")
+    msg.post(".", "acquire_input_focus")
     defsave.appname = "test_omg"
     levels_holder:init()
     user_progress:init()
+    msg.post("#", messages.LOAD_LEVEL)
 end
+
 
 function final(self)
     user_progress:done()
 end
 
+
 function on_message(self, message_id, message, sender)
-    if message_id == messages.START_LEVEL_SELECTION then
-        print(message_id)
+    if message_id == hash("proxy_loaded") then
+        msg.post(sender, "init")
+        msg.post(sender, "enable")
+    elseif message_id == messages.LOAD_LEVEL then
+        msg.post("#game_proxy", "load")
+    elseif message_id == messages.GOTO_LEVEL_MAP then
+        msg.post("#level_map_proxy", "load")
     end
 end
