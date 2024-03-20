@@ -1,4 +1,4 @@
-script: "/game/game/grid.gui_script"
+script: "/game/game/grid_controller.gui_script"
 fonts {
   name: "manrope"
   font: "/assets/fonts/manrope.font"
@@ -295,4 +295,4 @@ nodes {
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT
-max_nodes: 512
+max_nodes: 1024
