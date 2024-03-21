@@ -12,7 +12,7 @@ display_device_info = 0
 high_dpi = 0
 display_profiles = /builtins/render/default.display_profilesc
 fullscreen = 0
-vsync = 0
+vsync = 1
 
 [android]
 input_method = HiddenInputField
@@ -38,5 +38,5 @@ bundle_identifier = com.bymycode.test_omg
 show_fullscreen_button = 0
 show_made_with_defold = 0
 show_console_banner = 0
-scale_mode = no_scale
+scale_mode = downscale_fit
 

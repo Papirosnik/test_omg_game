@@ -59,7 +59,7 @@ function user_progress.total_bonus_words(self)
 end
 
 
-function user_progress.set_next_level(self)
+function user_progress.goto_next_level(self)
     if self.data.current_level < levels:count() then
         self.data.current_level = self.data.current_level + 1
     else

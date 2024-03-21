@@ -10,22 +10,31 @@ function init(self)
     defsave.appname = "test_omg"
     levels_holder:init()
     user_progress:init()
-    msg.post("#", messages.LOAD_LEVEL)
+    self.do_unload = false -- to prevent redundant unload / error in log
+    msg.post("#", messages.GOTO_LEVEL_MAP)
 end
 
 
-function final(self)
+function final(_)
     user_progress:done()
 end
 
 
-function on_message(self, message_id, message, sender)
+local function switch_scene(self, to_load, to_unload)
+    if self.do_unload then
+        msg.post(to_unload, "unload")
+    end
+    msg.post(to_load, "load")
+    self.do_unload = true
+end
+
+function on_message(self, message_id, _, sender)
     if message_id == hash("proxy_loaded") then
         msg.post(sender, "init")
         msg.post(sender, "enable")
     elseif message_id == messages.LOAD_LEVEL then
-        msg.post("#game_proxy", "load")
+        switch_scene(self, "#game_proxy", "#level_map_proxy")
     elseif message_id == messages.GOTO_LEVEL_MAP then
-        msg.post("#level_map_proxy", "load")
+        switch_scene(self, "#level_map_proxy", "#game_proxy")
     end
 end
