@@ -28,7 +28,7 @@ background_color {
 nodes {
   position {
     x: 320.0
-    y: 480.0
+    y: 568.0
     z: 0.0
     w: 1.0
   }
@@ -46,13 +46,13 @@ nodes {
   }
   size {
     x: 640.0
-    y: 960.0
+    y: 1136.0
     z: 0.0
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
+    x: 0.8
+    y: 0.902
     z: 1.0
     w: 1.0
   }
@@ -63,7 +63,7 @@ nodes {
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  adjust_mode: ADJUST_MODE_STRETCH
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -75,13 +75,13 @@ nodes {
   clipping_mode: CLIPPING_MODE_NONE
   clipping_visible: true
   clipping_inverted: false
-  alpha: 1.0
+  alpha: 0.75
   template_node_child: false
   size_mode: SIZE_MODE_MANUAL
   custom_type: 0
   enabled: true
   visible: true
-  material: ""
+  material: "gui"
 }
 nodes {
   position {
@@ -124,7 +124,7 @@ nodes {
   adjust_mode: ADJUST_MODE_FIT
   parent: "root"
   layer: ""
-  inherit_alpha: true
+  inherit_alpha: false
   slice9 {
     x: 0.0
     y: 0.0
@@ -247,10 +247,10 @@ nodes {
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  adjust_mode: ADJUST_MODE_STRETCH
   parent: "root"
   layer: ""
-  inherit_alpha: true
+  inherit_alpha: false
   outerBounds: PIEBOUNDS_ELLIPSE
   innerRadius: 0.0
   perimeterVertices: 64
@@ -353,7 +353,7 @@ nodes {
     w: 1.0
   }
   size {
-    x: 480.0
+    x: 420.0
     y: 64.0
     z: 0.0
     w: 1.0
@@ -376,10 +376,10 @@ nodes {
   layer: ""
   inherit_alpha: false
   slice9 {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+    x: 10.0
+    y: 10.0
+    z: 10.0
+    w: 10.0
   }
   clipping_mode: CLIPPING_MODE_NONE
   clipping_visible: true
@@ -412,15 +412,15 @@ nodes {
     w: 1.0
   }
   size {
-    x: 480.0
+    x: 420.0
     y: 64.0
     z: 0.0
     w: 1.0
   }
   color {
-    x: 0.256
-    y: 0.384
-    z: 0.886
+    x: 0.548
+    y: 0.61
+    z: 0.855
     w: 1.0
   }
   type: TYPE_TEXT
@@ -432,9 +432,9 @@ nodes {
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   outline {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 0.102
+    y: 0.102
+    z: 0.102
     w: 1.0
   }
   shadow {
@@ -443,7 +443,7 @@ nodes {
     z: 0.0
     w: 1.0
   }
-  adjust_mode: ADJUST_MODE_STRETCH
+  adjust_mode: ADJUST_MODE_FIT
   line_break: false
   parent: "current_word"
   layer: ""
@@ -453,7 +453,7 @@ nodes {
   shadow_alpha: 0.0
   template_node_child: false
   text_leading: 0.05
-  text_tracking: 0.05
+  text_tracking: 0.1
   custom_type: 0
   enabled: true
   visible: true
@@ -462,7 +462,7 @@ nodes {
 nodes {
   position {
     x: 0.0
-    y: 256.38937
+    y: 219.45052
     z: 0.0
     w: 1.0
   }
@@ -474,7 +474,7 @@ nodes {
   }
   scale {
     x: 1.0
-    y: 1.0
+    y: 0.9
     z: 1.0
     w: 1.0
   }
@@ -485,9 +485,9 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.6
-    y: 0.8
-    z: 0.6
+    x: 0.102
+    y: 0.102
+    z: 0.102
     w: 1.0
   }
   type: TYPE_TEXT
@@ -497,26 +497,26 @@ nodes {
   id: "txt_show_info"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
-  pivot: PIVOT_N
+  pivot: PIVOT_CENTER
   outline {
-    x: 0.102
-    y: 0.0
-    z: 0.408
+    x: 0.302
+    y: 0.302
+    z: 0.302
     w: 1.0
   }
   shadow {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 0.4
+    y: 0.4
+    z: 0.4
     w: 1.0
   }
-  adjust_mode: ADJUST_MODE_STRETCH
+  adjust_mode: ADJUST_MODE_FIT
   line_break: true
   parent: "root"
   layer: ""
   inherit_alpha: false
   alpha: 0.0
-  outline_alpha: 0.7
+  outline_alpha: 0.333
   shadow_alpha: 1.0
   template_node_child: false
   text_leading: 1.0
@@ -564,10 +564,10 @@ nodes {
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  adjust_mode: ADJUST_MODE_STRETCH
   parent: "root"
   layer: ""
-  inherit_alpha: true
+  inherit_alpha: false
   slice9 {
     x: 0.0
     y: 0.0
@@ -690,10 +690,10 @@ nodes {
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  adjust_mode: ADJUST_MODE_STRETCH
   parent: "root"
   layer: ""
-  inherit_alpha: true
+  inherit_alpha: false
   outerBounds: PIEBOUNDS_ELLIPSE
   innerRadius: 0.0
   perimeterVertices: 64

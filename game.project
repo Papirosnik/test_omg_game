@@ -7,9 +7,9 @@ shared_state = 1
 
 [display]
 width = 640
-height = 960
+height = 1136
 display_device_info = 0
-high_dpi = 0
+high_dpi = 1
 display_profiles = /builtins/render/default.display_profilesc
 fullscreen = 0
 vsync = 1
@@ -23,7 +23,6 @@ write_log = 0
 compress_archive = 0
 custom_resources = assets/data/
 dependencies#0 = https://github.com/subsoap/defsave/archive/master.zip
-dependencies#1 = https://github.com/defold/lua-language-server/releases/download/v0.0.5/release.zip
 
 [render]
 clear_color_green = 0.9

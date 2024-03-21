@@ -47,22 +47,25 @@ local function create_cells(self, level)
             self.cells[y][x] = new_cell
 
             local new_root = new_cell.nodes[const.HASH_CELL_ROOT]
+            gui.set_parent(new_root, gui.get_node(hash("root")))
 
             -- cells positioning and scaling (if needed)
-            local need_scale = level.size > 4
-            local scale_factor = need_scale and (4 / level.size) or 1
             local pos = gui.get_position(new_root)
             local mid = (level.size + 1) / 2
-            pos.x = 320 + (x - mid) * 128 * scale_factor
-            pos.y = 400 - (y - mid) * 128 * scale_factor
+            local need_scale = level.size > 4
+            local sfy = need_scale and (4 / level.size) or 1
+            local sfx = sfy * 1.1
+
+            pos.x = (x - mid) * 128 * sfx
+            pos.y = (mid - y) * 128 * sfy
             gui.set_position(new_root, pos)
 
             gui.set_scale(new_root, vmath.vector3(0))
             gui.set_enabled(new_root, true)
 
             gui.animate(new_root, gui.PROP_SCALE,
-                vmath.vector3(-scale_factor, scale_factor, scale_factor), gui.EASING_INOUTCIRC, 0.2, 0.25 + math.random() * 0.25,
-                    function() gui.animate(new_root, "scale.x", scale_factor, gui.EASING_LINEAR, 0.2, 0.6 + math.random() * 0.4) end)
+            vmath.vector3(-sfx, sfy, sfy), gui.EASING_INOUTCIRC, 0.2, 0.25 + math.random() * 0.25,
+            function() gui.animate(new_root, "scale.x", sfx, gui.EASING_LINEAR, 0.2, 0.6 + math.random() * 0.4) end)
         end
     end
 end

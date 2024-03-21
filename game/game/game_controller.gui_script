@@ -106,10 +106,10 @@ local function celebrate_win(self)
         sound.play("main:/main#sound_win", { pan = 0.0, gain = 0.5 })
         show_info(self, "CONGRATULATIONS!", 5)
         msg.post("game:/grid#grid_gui", messages.LEVEL_COMPLETE)
+        user_progress:goto_next_level()
     end
     timer.delay(1, false, postponed_action)
     timer.delay(6, false, function() show_info(self, "TAP TO CONTINUE", 5000) end)
-    user_progress:goto_next_level()
 end
 
 
@@ -149,6 +149,7 @@ function on_input(self, action_id, action)
             on_button_release(self.btn_reset_bonus)
             if inside_skip_button then
                 user_progress:goto_next_level()
+                sound.play("main:/main#sound_win", { pan = 0.0, gain = 0.5 })
                 close_game(self)
             elseif inside_reset_bonus then
                 user_progress:reset_bonus_words()
