@@ -40,13 +40,13 @@ end
 
 
 ---------------- message handlers ---------------
-local function load_level(self, index)
+local function load_level(self)
     self.win = false
     show_info(self, current_level:get().name, 10, 2)
     gui.set_enabled(self.root_node, true)
     gui.set_text(self.txt_current_level, "Level " .. current_level.index)
     msg.post("#", messages.UPDATE_BONUS_COUNT)
-    msg.post("game:/grid#grid_gui", messages.LOAD_LEVEL, { ["index"] = index })
+    msg.post("game:/grid#grid_gui", messages.START_GAME)
 end
 
 
@@ -104,10 +104,12 @@ local function celebrate_win(self)
     self.win = true
     local postponed_action = function()
         sound.play("main:/main#sound_win", { pan = 0.0, gain = 0.5 })
-        show_info(self, "CONGRATULATIONS!", 100500) -- show congrats forever
+        show_info(self, "CONGRATULATIONS!", 5)
         msg.post("game:/grid#grid_gui", messages.LEVEL_COMPLETE)
     end
-    timer.delay(1.5, false, postponed_action)
+    timer.delay(1, false, postponed_action)
+    timer.delay(6, false, function() show_info(self, "TAP TO CONTINUE", 5000) end)
+    user_progress:goto_next_level()
 end
 
 
@@ -157,8 +159,8 @@ end
 
 
 function on_message(self, message_id, message, sender)
-    if message_id == messages.LOAD_LEVEL then
-        load_level(self, message.index)
+    if message_id == messages.START_GAME then
+        load_level(self)
     elseif message_id == messages.SHOW_INFO then
         show_info(self, message.text)
     elseif message_id == messages.HIDE_INFO then

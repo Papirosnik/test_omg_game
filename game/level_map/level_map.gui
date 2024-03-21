@@ -323,7 +323,7 @@ nodes {
   line_break: true
   parent: "btn_play"
   layer: ""
-  inherit_alpha: false
+  inherit_alpha: true
   alpha: 1.0
   outline_alpha: 1.0
   shadow_alpha: 1.0

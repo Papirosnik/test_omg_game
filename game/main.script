@@ -32,7 +32,7 @@ function on_message(self, message_id, _, sender)
     if message_id == hash("proxy_loaded") then
         msg.post(sender, "init")
         msg.post(sender, "enable")
-    elseif message_id == messages.LOAD_LEVEL then
+    elseif message_id == messages.START_GAME then
         switch_scene(self, "#game_proxy", "#level_map_proxy")
     elseif message_id == messages.GOTO_LEVEL_MAP then
         switch_scene(self, "#level_map_proxy", "#game_proxy")

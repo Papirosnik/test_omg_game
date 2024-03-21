@@ -13,7 +13,7 @@ local current_level = {
 function current_level.load_by_index(self, level_index)
     self.index = level_index
     self.context = levels_holder:get_level_by_index(level_index)
-    msg.post("game:/game#game_gui", messages.LOAD_LEVEL, { ["index"] = level_index })
+    msg.post("game:/game#game_gui", messages.START_GAME)
 end
 
 

@@ -136,7 +136,7 @@ end
 
 
 function on_message(self, message_id, message, sender)
-    if message_id == messages.LOAD_LEVEL then
+    if message_id == messages.START_GAME then
         self.win = false
         load_level()
     elseif message_id == messages.WORD_ACCEPTED then

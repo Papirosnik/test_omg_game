@@ -9,11 +9,14 @@ local HASH_ITEM_ROOT = hash("item/root")
 local HASH_ITEM_TEXT = hash("item/text")
 local HASH_ITEM_FLAG = hash("item/flag")
 local HASH_SCROLL_AREA = hash("scroll_area")
+local HASH_SCROLL_MASK = hash("scroll_mask")
 
 local ITEMS_GAP = 200
 local SCROLL_ANIM_TIME = 0.75
 local SCROLL_ANIM_DELAY = 0.75
 local MARKER_ANIM_TIME = 0.4
+
+local DRAH_TRESHOLD_QUADR = 225 --(15 * 15)
 
 function init(self)
     msg.post(".", "acquire_input_focus")
@@ -23,6 +26,7 @@ function init(self)
     self.item_text = gui.get_node(HASH_ITEM_TEXT)
     self.item_flag = gui.get_node(HASH_ITEM_FLAG)
     self.scroll_area = gui.get_node(HASH_SCROLL_AREA)
+    self.scroll_mask = gui.get_node(HASH_SCROLL_MASK)
     self.items = {}
     msg.post("#", MSG_CREATE_LEVEL_ITEMS)
 end
@@ -43,24 +47,24 @@ function final(self)
 end
 
 
-local function on_button_press(btn_node)
-    gui.animate(btn_node, gui.PROP_SCALE, vmath.vector3(0.85), gui.EASING_LINEAR, 0.07)
-    sound.play("main:/main#sound_click", {pan = 0.0})
-end
-
-
-local function on_button_release(btn_node)
-    gui.animate(btn_node, gui.PROP_SCALE, vmath.vector3(1), gui.EASING_LINEAR, 0.07)
-end
-
-
 local function goto_game(self)
     local fn_done = function()
         gui.set_scale(self.root_node, vmath.vector3(1))
         gui.set_enabled(self.root_node, false)
-        msg.post("main:/main#main", messages.LOAD_LEVEL)
+        msg.post("main:/main#main", messages.START_GAME)
     end
     gui.animate(self.root_node, "scale.x", 0, gui.EASING_INBACK, 0.5, 0, fn_done) 
+end
+
+
+local function handle_avail_of_btn_play(self)
+    local start_time = SCROLL_ANIM_TIME + SCROLL_ANIM_DELAY + MARKER_ANIM_TIME + 0.1
+    gui.set_alpha(self.btn_play, 0.333)
+    gui.animate(self.btn_play, "color.w", 1, gui.EASING_LINEAR, 0.25, start_time)
+    gui.animate(self.btn_play, gui.PROP_SCALE, vmath.vector3(1.1), gui.EASING_LINEAR, 0.2, start_time, function()
+        gui.animate(self.btn_play, gui.PROP_SCALE, vmath.vector3(1), gui.EASING_LINEAR, 0.2)
+        self.is_ready = true
+    end)
 end
 
 
@@ -79,20 +83,26 @@ end
 
 local function activate(self)
 
+    handle_avail_of_btn_play(self)
+
     local next_ind = user_progress:current_level_index()
     local prev_ind = (next_ind - 1 < 1) and levels_holder:count() or (next_ind -1)
 
     clear(self)
     for i = 1, levels_holder:count() do
-        local level = levels_holder:get_level_by_index(i)
+
         table.insert(self.items, gui.clone_tree(self.item_root))
 
         local new_root = self.items[i][HASH_ITEM_ROOT]
         gui.set_parent(new_root, self.scroll_area, false)
-        gui.set_scale(new_root, vmath.vector3(0))
         gui.set_enabled(new_root, true)
         gui.set_position(new_root, vmath.vector3((i - 1) * ITEMS_GAP, 0, 0))
-        gui.animate(new_root, gui.PROP_SCALE, vmath.vector3(1), gui.EASING_OUTBACK, 0.2, 0.1 * i)
+
+        -- don't animate possible huge (and thus invisible) amount of level items
+        if i < 10 then
+            gui.set_scale(new_root, vmath.vector3(0))
+            gui.animate(new_root, gui.PROP_SCALE, vmath.vector3(1), gui.EASING_OUTBACK, 0.2, 0.1 * i)
+        end
 
         local new_text = self.items[i][HASH_ITEM_TEXT]
         gui.set_text(new_text, i)
@@ -105,15 +115,60 @@ local function activate(self)
 end
 
 
+local function on_button_press(btn_node)
+    gui.animate(btn_node, gui.PROP_SCALE, vmath.vector3(0.95), gui.EASING_LINEAR, 0.07)
+    sound.play("main:/main#sound_click", {pan = 0.0})
+end
+
+
+local function on_button_release(btn_node)
+    gui.animate(btn_node, gui.PROP_SCALE, vmath.vector3(1), gui.EASING_LINEAR, 0.07)
+end
+
+local function drag_release(self)
+    gui.cancel_animation(self.scroll_area, gui.PROP_POSITION)
+    gui.animate(self.scroll_area, "position.x", -(user_progress:current_level_index() - 1) * ITEMS_GAP,
+    gui.EASING_OUTBACK, SCROLL_ANIM_TIME, SCROLL_ANIM_DELAY * 2)
+    self.dragging = nil
+end
+
 function on_input(self, action_id, action)
+    if not self.is_ready then return end
     if action_id == hash("touch") then
         local inside_play_button = gui.pick_node(self.btn_play, action.x, action.y)
-        if action.pressed and inside_play_button then
-            on_button_press(self.btn_play)
+        if action.pressed then
+            if inside_play_button then
+                on_button_press(self.btn_play)
+            end
+            local inside_scroll_mask = gui.pick_node(self.scroll_mask, action.x, action.y)
+            if inside_scroll_mask then
+                gui.cancel_animation(self.scroll_area, gui.PROP_POSITION)
+                self.dragging = { x = action.x, y = action.y }
+            end
         elseif action.released then
             on_button_release(self.btn_play)
             if inside_play_button then
                 goto_game(self)
+            end
+            drag_release(self)
+        end
+    -- mouse movement with the pressed button
+    elseif action_id == nil and self.dragging then
+        if self.dragging.active then
+            local delta = action.x - self.dragging.x
+            local pos = gui.get_position(self.scroll_area)
+            pos.x = pos.x + delta
+            self.dragging.x = action.x
+            -- no need to go too far beyond the 1st or last levels
+            if (pos.x <= 280) and (pos.x > (-levels_holder:count() * ITEMS_GAP - 100)) then
+                gui.set_position(self.scroll_area, pos)
+                return true
+            end
+        else
+            local dx = self.dragging.x - action.x
+            local dy = self.dragging.y - action.y
+            if dx * dx + dy * dy >= DRAH_TRESHOLD_QUADR then
+                self.dragging = { x = action.x, y = action.y, active = true }
             end
         end
     end
@@ -121,7 +176,6 @@ end
 
 
 function on_message(self, message_id, message, sender)
-    print(message_id)
     if message_id == MSG_CREATE_LEVEL_ITEMS then
         activate(self)
     end
