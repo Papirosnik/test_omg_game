@@ -1,4 +1,4 @@
-script: "/game/game/grid_controller.gui_script"
+script: "/game/game/grid.gui_script"
 fonts {
   name: "manrope"
   font: "/assets/fonts/manrope.font"

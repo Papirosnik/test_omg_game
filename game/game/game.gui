@@ -1,4 +1,4 @@
-script: "/game/game/game_controller.gui_script"
+script: "/game/game/game.gui_script"
 fonts {
   name: "ddff"
   font: "/assets/fonts/ddff.font"
@@ -247,7 +247,7 @@ nodes {
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_STRETCH
+  adjust_mode: ADJUST_MODE_FIT
   parent: "root"
   layer: ""
   inherit_alpha: false
@@ -366,7 +366,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "common_atlas/white_button_round"
+  texture: "common_atlas/white_button"
   id: "current_word"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -559,12 +559,12 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "common_atlas/white_button_round"
+  texture: "common_atlas/white_button"
   id: "bonus_words"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_STRETCH
+  adjust_mode: ADJUST_MODE_FIT
   parent: "root"
   layer: ""
   inherit_alpha: false
@@ -690,7 +690,7 @@ nodes {
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_STRETCH
+  adjust_mode: ADJUST_MODE_FIT
   parent: "root"
   layer: ""
   inherit_alpha: false

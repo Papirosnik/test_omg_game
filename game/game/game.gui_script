@@ -62,7 +62,7 @@ end
 
 local function word_accepted(self, word, way, index)
     show_info(self, "FOUND!")
-    sound.play("main:/main#sound_word", {pan = 0.0, gain = 0.5})
+    sound.play("main:/main#sound_success", {pan = 0.0, gain = 0.3})
     msg.post("game:/grid#grid_gui", messages.WORD_ACCEPTED, { ["word"] = word, ["way"] = way, ["index"] = index })
 end
 
@@ -94,7 +94,7 @@ local function bonus_word_found(self, word)
         sound.play("main:/main#sound_negative", {pan = 0.0, gain = 0.5})
     else
         show_info(self, "BONUS WORD FOUND!")
-        sound.play("main:/main#sound_word", {pan = 0.0, gain = 0.5})
+        sound.play("main:/main#sound_positive", {pan = 0.0, gain = 0.5})
         user_progress:add_bonus_word(word)
     end
 end
@@ -104,12 +104,12 @@ local function celebrate_win(self)
     self.win = true
     local postponed_action = function()
         sound.play("main:/main#sound_win", { pan = 0.0, gain = 0.5 })
-        show_info(self, "CONGRATULATIONS!", 5)
+        show_info(self, "CONGRATULATIONS!", 3)
         msg.post("game:/grid#grid_gui", messages.LEVEL_COMPLETE)
         user_progress:goto_next_level()
     end
     timer.delay(1, false, postponed_action)
-    timer.delay(6, false, function() show_info(self, "TAP TO CONTINUE", 5000) end)
+    timer.delay(4, false, function() show_info(self, "TAP TO CONTINUE", 5000) end)
 end
 
 
