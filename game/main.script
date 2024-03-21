@@ -11,7 +11,7 @@ function init(self)
     levels_holder:init()
     user_progress:init()
     self.do_unload = false -- to prevent redundant unload / error in log
-    msg.post("#", messages.GOTO_LEVEL_MAP)
+    msg.post("#", messages.START_GAME)
 end
 
 
