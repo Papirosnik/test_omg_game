@@ -45,7 +45,7 @@ local function load_level(self)
     show_info(self, current_level:get().name, 10, 2)
     gui.set_enabled(self.root_node, true)
     gui.set_text(self.txt_current_level, "Level " .. current_level.index)
-    msg.post("#", messages.UPDATE_BONUS_COUNT)
+    msg.post("#", messages.UPDATE_BONUS_WORDS)
     msg.post("game:/grid#grid_gui", messages.START_GAME)
 end
 
@@ -82,7 +82,7 @@ end
 
 local function update_bonus_word_counter(self)
     local when_done = function()
-        gui.set_text(self.txt_bonus_words, "Bonus words: "..user_progress:total_bonus_words())
+        gui.set_text(self.txt_bonus_words, "Bonus words: "..user_progress:get_bonus_words_count())
     end
     gui.animate(self.box_bonus_words, gui.PROP_SCALE, 1.1, gui.EASING_INOUTCIRC, 0.75, 0, when_done, gui.PLAYBACK_ONCE_PINGPONG)
 end
@@ -178,7 +178,7 @@ function on_message(self, message_id, message, sender)
         try_another_way(self)
     elseif message_id == messages.BONUS_WORD_FOUND then
         bonus_word_found(self, message.word)
-    elseif message_id == messages.UPDATE_BONUS_COUNT then
+    elseif message_id == messages.UPDATE_BONUS_WORDS then
         update_bonus_word_counter(self)
     elseif message_id == messages.LEVEL_COMPLETE then
         celebrate_win(self)

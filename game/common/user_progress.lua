@@ -4,18 +4,17 @@ local defsave = require "defsave.defsave"
 
 
 local KEY_CURRENT = "current"
+
 local KEY_CURRENT_LEVEL = "current_level"
 local KEY_LEVEL_PROGRESS = "level_progress"
-local KEY_LEVEL_BONUS_WORDS = "level_bonus_words"
-local KEY_TOTAL_BONUS_WORDS = "total_bonus_words"
+local KEY_BONUS_WORDS = "bonus_words"
 
 
 local user_progress = {
     data = {
         [KEY_CURRENT_LEVEL] = 1,
         [KEY_LEVEL_PROGRESS] = {}, -- array of records {"word": str, "way": [numbers]}
-        [KEY_LEVEL_BONUS_WORDS] = {}, -- array of string (found bonus words for the current level)
-        [KEY_TOTAL_BONUS_WORDS] = 0
+        [KEY_BONUS_WORDS] = {}, -- hash set
     }
 }
 
@@ -29,8 +28,7 @@ function user_progress.init(self)
     defsave.load(KEY_CURRENT)
     self.data.current_level = defsave.get(KEY_CURRENT, KEY_CURRENT_LEVEL)
     self.data.level_progress = defsave.get(KEY_CURRENT, KEY_LEVEL_PROGRESS)
-    self.data.level_bonus_words = defsave.get(KEY_CURRENT, KEY_LEVEL_BONUS_WORDS)
-    self.data.total_bonus_words = defsave.get(KEY_CURRENT, KEY_TOTAL_BONUS_WORDS)
+    self.data.bonus_words = defsave.get(KEY_CURRENT, KEY_BONUS_WORDS)
 end
 
 
@@ -54,8 +52,12 @@ function user_progress.current_level_progress(self)
 end
 
 
-function user_progress.total_bonus_words(self)
-    return self.data.total_bonus_words
+function user_progress.get_bonus_words_count(self)
+    local res = 0
+    for _ in pairs(self.data.bonus_words) do
+        res = res + 1
+    end
+    return res
 end
 
 
@@ -71,7 +73,7 @@ function user_progress.goto_next_level(self)
     self.data.level_progress = {}
     self.data.level_bonus_words = {}
     defsave.set(KEY_CURRENT, KEY_LEVEL_PROGRESS, self.data.level_progress)
-    defsave.set(KEY_CURRENT, KEY_LEVEL_BONUS_WORDS, self.data.level_bonus_words)
+    defsave.set(KEY_CURRENT, KEY_BONUS_WORDS, self.data.level_bonus_words)
 
     flush_save()
 end
@@ -86,28 +88,25 @@ end
 
 
 function user_progress.check_bonus_word(self, word)
-    return self.data.level_bonus_words[word]
+    return self.data.bonus_words[word]
 end
 
 
 local function save_bonus_words(self)
-    defsave.set(KEY_CURRENT, KEY_LEVEL_BONUS_WORDS, self.data.level_bonus_words)
-    defsave.set(KEY_CURRENT, KEY_TOTAL_BONUS_WORDS, self.data.total_bonus_words)
+    defsave.set(KEY_CURRENT, KEY_BONUS_WORDS, self.data.bonus_words)
     flush_save()
-    msg.post("game:/game#game_gui", messages.UPDATE_BONUS_COUNT)
+    msg.post("game:/game#game_gui", messages.UPDATE_BONUS_WORDS)
 end
 
 
 function user_progress.add_bonus_word(self, word)
-    self.data.level_bonus_words[word] = true
-    self.data.total_bonus_words = self.data.total_bonus_words + 1
+    self.data.bonus_words[word] = true
     save_bonus_words(self)
 end
 
 
 function user_progress.reset_bonus_words(self)
-    self.data.level_bonus_words = {}
-    self.data.total_bonus_words = 0
+    self.data.bonus_words = {}
     save_bonus_words(self)
 end
 
