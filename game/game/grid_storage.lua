@@ -4,6 +4,8 @@ local user_progress = require "game.common.user_progress"
 local current_level = require "game.game.current_level"
 
 
+local cell_view_size = 128
+
 local grid_storage = {
     is_ready = false,
     cells = {}
@@ -32,6 +34,11 @@ local function create_cells(self, level)
 
     local template = gui.get_node(const.HASH_CELL_ROOT)
 
+    local mid = (level.size + 1) / 2
+    local need_scale = level.size > 4
+    local sfy = need_scale and (4 / level.size) or 1
+    local sfx = sfy * 1.1
+
     for y = 1, level.size do
 
         self.cells[y] = {}
@@ -51,13 +58,9 @@ local function create_cells(self, level)
 
             -- cells positioning and scaling (if needed)
             local pos = gui.get_position(new_root)
-            local mid = (level.size + 1) / 2
-            local need_scale = level.size > 4
-            local sfy = need_scale and (4 / level.size) or 1
-            local sfx = sfy * 1.1
 
-            pos.x = (x - mid) * 128 * sfx
-            pos.y = (mid - y) * 128 * sfy
+            pos.x = (x - mid) * cell_view_size * sfx
+            pos.y = (mid - y) * cell_view_size * sfy
             gui.set_position(new_root, pos)
 
             gui.set_scale(new_root, vmath.vector3(0))
