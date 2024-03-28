@@ -1,5 +1,5 @@
 local M = {
-    START_GAME = hash("load_level"),
+    START_GAME = hash("start_game"),
     SHOW_INFO = hash("show_info"),
     HIDE_INFO = hash("hide_info"),
     INPUT_CHANGED = hash("input_changed"), -- input: str

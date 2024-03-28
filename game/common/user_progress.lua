@@ -95,7 +95,6 @@ end
 local function save_bonus_words(self)
     defsave.set(KEY_CURRENT, KEY_BONUS_WORDS, self.data.bonus_words)
     flush_save()
-    msg.post("game:/game#game_gui", messages.UPDATE_BONUS_WORDS)
 end
 
 

@@ -1,10 +1,10 @@
-local levels_holder = {}
+local const  = require "game.common.constants"
 
-local res_uri = "/assets/data/levels.json"
+local levels_holder = {}
 
 
 function levels_holder.init(self)
-    local levels_json = sys.load_resource(res_uri)
+    local levels_json = sys.load_resource(const.FILENAME_LEVELS)
     self.data = json.decode(levels_json)
 end
 
@@ -15,12 +15,7 @@ end
 
 
 function levels_holder.get_level_by_index(self, level_index)
-    for index, level in ipairs(self.data) do
-        if index == level_index then
-            return level
-        end
-    end
-    print("WARNING: No level found with index " .. level_index)
+    return self.data[level_index]
 end
 
 
